@@ -7,13 +7,9 @@
 
 
 /**
+ *main - Entry point
  *
- *  * main - assign a random number to the variable n each time it is executed
- *
- *   * The string Last digit of n
- *
- *    * Return: 0
- *
+ * Return: Always 0 (Success)
 */
 
 
