@@ -1,28 +1,26 @@
-#include <stdio.h>
 #include "main.h"
-/**
- **leet -main entry.
- *void: nothing
- *@a:char pointer
- *Description: function that encodes a string
- * Return:void
- **/
-char *leet(char *a)
-{
-	int c, c2;
-	char sp[] = {97, 101, 111, 116, 108};
-	char nm[] = {52, 51, 48, 55, 49};
-/* num of sp are the lettter in ascci. Nm the numbers in ascii*/
 
-	for (c = 0; a[c] != '\0'; c++)
+/**
+ * leet - encode
+ * @s: pointer to char params
+ * Return: *s
+ */
+
+char *leet(char *s)
+{
+	int i;
+	int j;
+	char l[] = "ol_ea__t";
+
+	for (i = 0; s[i] != '\0'; i++)
 	{
-		for (c2 = 0; sp[c2] != '\0'; c2++)
+		for (j = 0; l[j] != '\0'; j++)
 		{
-			if ((a[c] == sp[c2]) || (a[c] == sp[c2] - 32))
+			if (s[i] == l[j] || s[i] == (l[j] - 32))
 			{
-				a[c] = nm[c2];
+				s[i] = j + '0';
 			}
 		}
 	}
-	return (a);
+	return (s);
 }
