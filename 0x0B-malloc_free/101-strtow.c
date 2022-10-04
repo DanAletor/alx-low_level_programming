@@ -1,88 +1,72 @@
-#include "main.h"
 #include <stdlib.h>
 
 /**
- * countword - function that counts words in a string
- * @s: character string to be counted through
- * Return: number of words in string
+ * get_nwords - get the number of space separated words in `s'
+ * @s: string to search
+ *
+ * Return: number of words in `s'
  */
-int countword(char *s)
+int get_nwords(char *s)
 {
-	int i;
-	int count;
+	int i = 0, nwords = 0;
 
-	for (i = 0; s[i]; i++)
-		if (s[i] != ' ')
-			count++;
-	for (; s[i] && s[i] != ' '; i++)
-		;
-	return (count);
-}
-
-#include "main.h"
-#include <stdlib.h>
-
-/**
- * free_2d - function that frees a 2 dimensional grid
- * @grid: double pointer integer
- * @height: integer
- * Return: void
- */
-void free_2d(char **grid, int height)
-{
-	int i;
-
-	for (i = 0; i < height; i++)
+	while (s[i])
 	{
-		if (grid[i] != NULL)
-			free(grid[i]);
+		while (s[i] && s[i] == ' ')
+			++i;
+		if (s[i] == '\0')
+			break;
+		while (s[i] && s[i] != ' ')
+			++i;
+		++nwords;
 	}
-	free(grid);
+	return (nwords);
 }
 
 /**
- * strtow - function that splits a string into words
- * @str: string that contains words
- * Return: words from the string
+ * strtow - split `str' into array of words using spaces to delimit words
+ * @str: string of space-separated words
+ *
+ * Return: pointer to array of strings, or NULL on failure
  */
 char **strtow(char *str)
 {
-	int i, j, w, count;
-	int wordnum = 0;
-	char **ar;
+	int i, j, k, nwords, end, begin;
+	char **p;
 
-	if (str == NULL)
+	if (str == NULL || *str == '\0')
 		return (NULL);
-	if (str[0] == '\0')
+	nwords = get_nwords(str);
+	if (nwords == 0)
 		return (NULL);
-
-	count = countword(str);
-
-	ar = malloc((count + 1) * sizeof(char *));
-
-	if (ar == NULL)
+	++nwords;
+	p = (char **) malloc(nwords * sizeof(char *));
+	if (p == NULL)
 		return (NULL);
-
-	for (i = 0; str[i]; i++)
+	i = j = 0;
+	while (str[i])
 	{
-		if (str[i] != ' ')
+		while (str[i] && str[i] == ' ')
+			++i;
+		if (str[i] == '\0')
+			break;
+		begin = i;
+		while (str[i] && str[i] != ' ')
+			++i;
+		end = i;
+		p[j] = (char *) malloc((end - begin + 1) * sizeof(char));
+		if (p[j] == NULL)
 		{
-			for (j = i; str[j] && str[i] != ' '; j++)
-				;
-			ar[wordnum] = malloc((j - i + 1) * sizeof(char));
-
-			if (ar[wordnum] == NULL)
-			{
-				free_2d(ar, wordnum);
-				return (NULL);
-			}
-
-			for (w = 0; str[i] && str[i] != ' '; i++, w++)
-				ar[wordnum][w] = str[i];
-			ar[wordnum][w] = '\0';
-			wordnum++;
+			free(p[j]);
+			while (j)
+				free(p[--j]);
+			free(p);
+			return (NULL);
 		}
+		for (k = 0; k < (end - begin); ++k)
+			p[j][k] = str[begin + k];
+		p[j++][k] = '\0';
 	}
-	ar[wordnum] = NULL;
-	return (ar);
+	p[j] = NULL;
+	return (p);
 }
